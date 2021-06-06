@@ -4,7 +4,7 @@ from .models import Employee, Department
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene import relay
 from graphql_relay import from_global_id
-from graphql_jwt import login_required
+from graphql_jwt.decorators import login_required
 
 class EmployeeNode(DjangoObjectType):
     class Meta:
@@ -31,7 +31,7 @@ class DeptCreateMutation(relay.ClientIDMutation):
     department = graphene.Field(DepartmentNode)
 
     @login_required
-    def mutate_andget_payload(root, info, **input):
+    def mutate_and_get_payload(root, info, **input):
 
         department = Department(
             dept_name=input.get('dept_name'),
@@ -62,18 +62,18 @@ class EmployeeCreateMutation(relay.ClientIDMutation):
         join_year = graphene.Int(required=True)
         department = graphene.ID(required=True)
 
-        employee = graphene.Field(EmployeeNode)
+    employee = graphene.Field(EmployeeNode)
 
-        @login_required
-        def mutate_and_get_payload(root, info, **input):
-            employee= Employee(
-                name=input.get('name'),
-                join_year=input.get('join_year'),
-                department_id=from_global_id(input.get('department'))[1]
-            )
-            employee.save()
+    @login_required
+    def mutate_and_get_payload(root, info, **input):
+        employee= Employee(
+            name=input.get('name'),
+            join_year=input.get('join_year'),
+            department_id=from_global_id(input.get('department'))[1]
+        )
+        employee.save()
 
-            return  EmployeeCreateMutation(employee=employee)
+        return  EmployeeCreateMutation(employee=employee)
 
 class EmployeeUpdateMutateion(relay.ClientIDMutation):
     class Input:

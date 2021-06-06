@@ -4,12 +4,12 @@ from django.contrib.auth import get_user_model
 import graphql_jwt
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene import relay
-from graphql_jwt import login_required
+from graphql_jwt.decorators import login_required
 
 class UserNode(DjangoObjectType):
     class Meta:
         model = get_user_model()
-        filter_filels = {
+        filter_fields = {
             'username': ['exact', 'icontains'],
         }
         interfaces = (relay.Node,)
