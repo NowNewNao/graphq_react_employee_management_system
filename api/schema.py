@@ -6,6 +6,7 @@ from graphene import relay
 from graphql_relay import from_global_id
 from graphql_jwt.decorators import login_required
 
+
 class EmployeeNode(DjangoObjectType):
     class Meta:
         model = Employee
@@ -16,6 +17,7 @@ class EmployeeNode(DjangoObjectType):
         }
         interfaces = (relay.Node,)
 
+
 class DepartmentNode(DjangoObjectType):
     class Meta:
         model = Department
@@ -23,6 +25,7 @@ class DepartmentNode(DjangoObjectType):
             'employees': ['exact'],
             'dept_name': ['exact']}
         interfaces = (relay.Node,)
+
 
 class DeptCreateMutation(relay.ClientIDMutation):
     class Input:
@@ -40,6 +43,7 @@ class DeptCreateMutation(relay.ClientIDMutation):
 
         return DeptCreateMutation(department=department)
 
+
 class DeptDeleteMutation(relay.ClientIDMutation):
     class Input:
         id = graphene.ID(required=True)
@@ -54,7 +58,8 @@ class DeptDeleteMutation(relay.ClientIDMutation):
         )
         department.delete()
 
-        return  DeptDeleteMutation(department=None)
+        return DeptDeleteMutation(department=None)
+
 
 class EmployeeCreateMutation(relay.ClientIDMutation):
     class Input:
@@ -66,16 +71,17 @@ class EmployeeCreateMutation(relay.ClientIDMutation):
 
     @login_required
     def mutate_and_get_payload(root, info, **input):
-        employee= Employee(
+        employee = Employee(
             name=input.get('name'),
             join_year=input.get('join_year'),
             department_id=from_global_id(input.get('department'))[1]
         )
         employee.save()
 
-        return  EmployeeCreateMutation(employee=employee)
+        return EmployeeCreateMutation(employee=employee)
 
-class EmployeeUpdateMutateion(relay.ClientIDMutation):
+
+class EmployeeUpdateMutation(relay.ClientIDMutation):
     class Input:
         id = graphene.ID(required=True)
         name = graphene.String(required=True)
@@ -96,7 +102,7 @@ class EmployeeUpdateMutateion(relay.ClientIDMutation):
 
         employee.save()
 
-        return EmployeeCreateMutation(employee=employee)
+        return EmployeeUpdateMutation(employee=employee)
 
 
 class EmployeeDeleteMutation(relay.ClientIDMutation):
@@ -113,14 +119,14 @@ class EmployeeDeleteMutation(relay.ClientIDMutation):
         )
         employee.delete()
 
-        return  EmployeeDeleteMutation(employee=None)
+        return EmployeeDeleteMutation(employee=None)
 
 
-class Mutateion(graphene.AbstractType):
+class Mutation(graphene.AbstractType):
     create_dept = DeptCreateMutation.Field()
     delete_dept = DeptDeleteMutation.Field()
     create_employee = EmployeeCreateMutation.Field()
-    update_employee = EmployeeUpdateMutateion.Field()
+    update_employee = EmployeeUpdateMutation.Field()
     delete_employee = EmployeeDeleteMutation.Field()
 
 
