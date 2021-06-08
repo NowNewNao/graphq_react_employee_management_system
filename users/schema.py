@@ -6,6 +6,7 @@ from graphene_django.filter import DjangoFilterConnectionField
 from graphene import relay
 from graphql_jwt.decorators import login_required
 
+
 class UserNode(DjangoObjectType):
     class Meta:
         model = get_user_model()
@@ -19,7 +20,7 @@ class CreateUserMutation(relay.ClientIDMutation):
 
     class Input:
         username = graphene.String(required=True)
-        passoword = graphene.String(required=True)
+        password = graphene.String(required=True)
         email = graphene.String(required=True)
 
     user = graphene.Field(UserNode)
