@@ -40,18 +40,8 @@ INSTALLED_APPS = [
     'graphene_django',
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
-    'corsheaders'
+    'corsheaders',
 ]
-
-GRAPHQL_JWT = {
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': timedelta(minutes=60),
-}
-
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000"
-]
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -62,6 +52,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+GRAPHQL_JWT = {
+     'JWT_VERIFY_EXPIRATION': True,
+     'JWT_EXPIRATION_DELTA': timedelta(minutes=60),
+}
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000"
 ]
 
 ROOT_URLCONF = 'employees.urls'
@@ -95,15 +94,15 @@ DATABASES = {
     }
 }
 
-GRAPHEN = { 'SCHEMA': 'employees.schema.shema',
+GRAPHENE = {'SCHEMA': 'employees.schema.schema',
             'MIDDLEWARE': [
                 'graphql_jwt.middleware.JSONWebTokenMiddleware',
             ],
 }
 
 AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
-    'django.contrib.auth.backends.ModelBackend',
+  'graphql_jwt.backends.JSONWebTokenBackend',
+  'django.contrib.auth.backends.ModelBackend',
 ]
 
 # Password validation
